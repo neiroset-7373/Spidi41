@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -19,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     
     private WebView webView;
     private ProgressBar progressBar;
+    private static final String TAG = "WintoPhone";
     private static final int REQUEST_CODE_PERMISSIONS = 1001;
     private static final int REQUEST_FILE_PICKER = 1002;
     
@@ -43,114 +47,145 @@ public class MainActivity extends AppCompatActivity {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        
-        initWebView();
-        checkPermissions();
+        try {
+            super.onCreate(savedInstanceState);
+            
+            // Allow network requests
+            if (android.os.Build.VERSION.SDK_INT > 9) {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+            }
+            
+            setContentView(R.layout.activity_main);
+            
+            Log.d(TAG, "Activity created, initializing WebView...");
+            initWebView();
+            checkPermissions();
+            
+            Log.d(TAG, "WebView initialized successfully");
+        } catch (Exception e) {
+            Log.e(TAG, "Error in onCreate: " + e.getMessage(), e);
+            e.printStackTrace();
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
     
     private void initWebView() {
-        webView = findViewById(R.id.webView);
-        progressBar = findViewById(R.id.progressBar);
-        
-        webView.setLayoutParams(new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        ));
-        
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setDatabaseEnabled(true);
-        webSettings.setAllowFileAccess(true);
-        webSettings.setAllowContentAccess(true);
-        webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        
-        // Поддержка камеры в WebView
-        webSettings.setMediaPlaybackRequiresUserGesture(false);
-        webSettings.setAllowFileAccessFromFileURLs(false);
-        webSettings.setAllowUniversalAccessFromFileURLs(false);
-        
-        // Поддержка файловых форматов
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        
-        webView.setWebViewClient(new WebViewClient());
-        
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                progressBar.setProgress(newProgress);
-                if (newProgress == 100) {
-                    progressBar.setVisibility(View.GONE);
-                } else {
-                    progressBar.setVisibility(View.VISIBLE);
-                }
+        try {
+            webView = findViewById(R.id.webView);
+            progressBar = findViewById(R.id.progressBar);
+            
+            if (webView == null) {
+                Log.e(TAG, "WebView is null!");
+                return;
             }
             
-            @Override
-            public void onPermissionRequest(PermissionRequest request) {
-                if (request.getOrigin().toString().contains("file://") || 
-                    request.getOrigin().toString().contains("https://")) {
-                    request.grant(request.getResources());
-                }
-            }
+            webView.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            ));
             
-            @Override
-            public boolean onShowFileChooser(WebView webView, 
-                ValueCallback<Uri[]> filePathCallback, 
-                FileChooserParams fileChooserParams) {
-                
-                ArrayList<Uri> results = new ArrayList<>();
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                
-                // Поддержка аудио-форматов
-                if (fileChooserParams.getAcceptTypes().length > 0) {
-                    String acceptType = fileChooserParams.getAcceptTypes()[0];
-                    if (acceptType.contains("audio") || acceptType.contains("mp3") || 
-                        acceptType.contains("wav") || acceptType.contains("m4a")) {
-                        intent.setType("audio/*");
-                        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{
-                            "audio/mpeg",
-                            "audio/wav",
-                            "audio/x-wav",
-                            "audio/mp4",
-                            "audio/x-m4a",
-                            "audio/m4a"
-                        });
+            WebSettings webSettings = webView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setDomStorageEnabled(true);
+            webSettings.setDatabaseEnabled(true);
+            webSettings.setAllowFileAccess(true);
+            webSettings.setAllowContentAccess(true);
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            webSettings.setMediaPlaybackRequiresUserGesture(false);
+            webSettings.setAllowFileAccessFromFileURLs(false);
+            webSettings.setAllowUniversalAccessFromFileURLs(false);
+            webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+            webSettings.setUseWideViewPort(true);
+            webSettings.setLoadWithOverviewMode(true);
+            
+            Log.d(TAG, "WebView settings configured");
+            
+            webView.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    Log.d(TAG, "Page loaded: " + url);
+                    if (progressBar != null) {
+                        progressBar.setVisibility(View.GONE);
                     }
                 }
                 
-                startActivityForResult(
-                    Intent.createChooser(intent, "Выберите файл"),
-                    REQUEST_FILE_PICKER
-                );
+                @Override
+                public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                    Log.e(TAG, "WebView error: " + description);
+                }
+            });
+            
+            webView.setWebChromeClient(new WebChromeClient() {
+                @Override
+                public void onProgressChanged(WebView view, int newProgress) {
+                    if (progressBar != null) {
+                        progressBar.setProgress(newProgress);
+                        if (newProgress == 100) {
+                            progressBar.setVisibility(View.GONE);
+                        } else {
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
                 
-                return true;
-            }
-        });
-        
-        webView.loadUrl("file:///android_asset/www/index.html");
+                @Override
+                public void onPermissionRequest(PermissionRequest request) {
+                    Log.d(TAG, "Permission request: " + request.getOrigin());
+                    request.grant(request.getResources());
+                }
+                
+                @Override
+                public boolean onShowFileChooser(WebView webView, 
+                    ValueCallback<Uri[]> filePathCallback, 
+                    FileChooserParams fileChooserParams) {
+                    
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.setType("*/*");
+                        
+                        startActivityForResult(
+                            Intent.createChooser(intent, "Выберите файл"),
+                            REQUEST_FILE_PICKER
+                        );
+                        
+                        return true;
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error showing file chooser: " + e.getMessage(), e);
+                        return false;
+                    }
+                }
+            });
+            
+            webView.loadUrl("file:///android_asset/www/index.html");
+            Log.d(TAG, "Loading URL: file:///android_asset/www/index.html");
+        } catch (Exception e) {
+            Log.e(TAG, "Error in initWebView: " + e.getMessage(), e);
+            e.printStackTrace();
+        }
     }
     
     private void checkPermissions() {
-        ArrayList<String> permissionsNeeded = new ArrayList<>();
-        
-        for (String permission : requiredPermissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) 
-                != PackageManager.PERMISSION_GRANTED) {
-                permissionsNeeded.add(permission);
+        try {
+            ArrayList<String> permissionsNeeded = new ArrayList<>();
+            
+            for (String permission : requiredPermissions) {
+                if (ContextCompat.checkSelfPermission(this, permission) 
+                    != PackageManager.PERMISSION_GRANTED) {
+                    permissionsNeeded.add(permission);
+                }
             }
-        }
-        
-        if (!permissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(
-                this,
-                permissionsNeeded.toArray(new String[0]),
-                REQUEST_CODE_PERMISSIONS
-            );
+            
+            if (!permissionsNeeded.isEmpty()) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    permissionsNeeded.toArray(new String[0]),
+                    REQUEST_CODE_PERMISSIONS
+                );
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error checking permissions: " + e.getMessage(), e);
         }
     }
     
@@ -169,8 +204,7 @@ public class MainActivity extends AppCompatActivity {
             }
             
             if (!allGranted) {
-                // Перезапрос при необходимости
-                checkPermissions();
+                Log.w(TAG, "Some permissions were denied");
             }
         }
     }
@@ -182,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_FILE_PICKER && resultCode == RESULT_OK) {
             if (data != null && data.getData() != null) {
                 Uri uri = data.getData();
-                // Обработка выбранного файла
                 handleFileSelection(uri);
             }
         }
@@ -191,41 +224,35 @@ public class MainActivity extends AppCompatActivity {
     private void handleFileSelection(Uri uri) {
         try {
             String mimeType = getContentResolver().getType(uri);
-            if (mimeType != null && (
-                mimeType.contains("audio/mpeg") ||
-                mimeType.contains("audio/wav") ||
-                mimeType.contains("audio/x-wav") ||
-                mimeType.contains("audio/mp4") ||
-                mimeType.contains("audio/x-m4a") ||
-                mimeType.contains("audio/m4a")
-            )) {
-                // Файл принят
-                String filePath = uri.getPath();
-                if (filePath != null) {
-                    File file = new File(filePath);
-                    if (file.exists()) {
-                        // Файл готов к использованию
-                    }
-                }
-            }
+            Log.d(TAG, "File selected: " + uri + ", MIME: " + mimeType);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error handling file: " + e.getMessage(), e);
         }
     }
     
     @Override
     protected void onDestroy() {
-        if (webView != null) {
-            webView.destroy();
+        try {
+            if (webView != null) {
+                webView.destroy();
+            }
+            Log.d(TAG, "Activity destroyed");
+        } catch (Exception e) {
+            Log.e(TAG, "Error in onDestroy: " + e.getMessage(), e);
         }
         super.onDestroy();
     }
     
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
-        } else {
+        try {
+            if (webView != null && webView.canGoBack()) {
+                webView.goBack();
+            } else {
+                super.onBackPressed();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error in onBackPressed: " + e.getMessage(), e);
             super.onBackPressed();
         }
     }
