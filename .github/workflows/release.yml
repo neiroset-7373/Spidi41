@@ -12,6 +12,9 @@ permissions:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: wintophone
 
     steps:
       - name: Checkout repository
@@ -24,19 +27,14 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        working-directory: ./wintophone
         run: npm ci
 
       - name: Build
-        working-directory: ./wintophone
         run: npm run build
 
       - name: Create Release Archive
         run: |
-          cd wintophone/dist
-          zip -r ../wintophone-release.zip .
-          cd ..
-          mv wintophone-release.zip .
+          zip -r wintophone-release.zip dist/
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
