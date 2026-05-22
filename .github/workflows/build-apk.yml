@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Setup Java
@@ -38,30 +38,41 @@ jobs:
       - name: Build web app
         run: npm run build
 
+      - name: Add Capacitor Android
+        run: |
+          npx cap add android
+
+      - name: Sync Capacitor
+        run: |
+          npx cap sync
+
       - name: Build Debug APK
         run: |
           cd android
           ./gradlew assembleDebug
 
+      - name: Rename APK
+        run: |
+          cd android/app/build/outputs/apk/debug
+          mv app-debug.apk wintophone-qwertyos.apk
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: wintophone-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: wintophone-qwertyos-apk
+          path: android/app/build/outputs/apk/debug/wintophone-qwertyos.apk
           retention-days: 30
 
       - name: Upload to GitHub Releases
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
-          files: android/app/build/outputs/apk/debug/app-debug.apk
+          files: android/app/build/outputs/apk/debug/wintophone-qwertyos.apk
           tag_name: v${{ github.run_number }}
-          name: WintoPhone v2.0.33 Build ${{ github.run_number }}
+          name: WintoPhone QwertyOS v${{ github.run_number }}
           body: |
             Автоматическая сборка APK
-            - Версия: 2.0.33
-            - Build: ${{ github.run_number }}
-            - Java: 24
-            - Android SDK: 35
+            - Версия: ${{ github.run_number }}
+            - Имя файла: wintophone-qwertyos.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
