@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "org.wintozo.qwertyos"
+    namespace = "com.wintozo.qwertyos"
     compileSdk = 35
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_24
         targetCompatibility = JavaVersion.VERSION_24
     }
     defaultConfig {
-        applicationId "org.wintozo.qwertyos"
+        applicationId "com.wintozo.qwertyos"
         minSdkVersion 24
         targetSdkVersion 35
         versionCode 2033

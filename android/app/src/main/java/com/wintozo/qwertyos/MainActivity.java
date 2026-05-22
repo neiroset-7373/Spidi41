@@ -1,4 +1,4 @@
-package org.wintozo.qwertyos;
+package com.wintozo.qwertyos;
 
 import android.Manifest;
 import android.content.Intent;
