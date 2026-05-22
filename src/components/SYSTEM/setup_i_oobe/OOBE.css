@@ -1,0 +1,31 @@
+.oobe-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.oobe-progress {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.oobe-progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.oobe-progress-dot.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  width: 28px;
+  border-radius: 4px;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+}

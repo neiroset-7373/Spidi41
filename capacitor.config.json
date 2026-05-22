@@ -1,0 +1,9 @@
+{
+  "appId": "com.wintozo.qwertyos",
+  "appName": "QwerUI - WintoPhone Simulator",
+  "webDir": "dist",
+  "version": "2.01.34.11",
+  "server": {
+    "androidScheme": "https"
+  }
+}

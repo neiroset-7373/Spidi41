@@ -1,0 +1,12 @@
+﻿node_modules/
+dist/
+build/
+.DS_Store
+*.log
+.npm
+.env
+.env.local
+wintophone/android/.gradle/
+wintophone/android/capacitor.settings.gradle
+wintophone/android/local.properties
+wintophone/android/app/build/

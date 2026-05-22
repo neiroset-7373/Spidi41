@@ -1,0 +1,142 @@
+.calculator-app {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #0f0f16;
+  color: #fff;
+  animation: appEnter 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes appEnter {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: rgba(15, 15, 22, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.back-button {
+  color: #818cf8;
+  font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 10px;
+  transition: all 0.2s;
+}
+
+.back-button:active {
+  transform: scale(0.85);
+}
+
+.app-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.header-spacer {
+  width: 32px;
+}
+
+.calculator-display {
+  padding: 30px 24px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.calc-operation {
+  font-size: 18px;
+  opacity: 0.4;
+  min-height: 22px;
+  font-weight: 500;
+}
+
+.calc-result {
+  font-size: 52px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px;
+  background: linear-gradient(180deg, #fff 0%, #c7d2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.calculator-pad {
+  flex: 1;
+  padding: 16px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calc-row {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+}
+
+.calc-btn {
+  flex: 1;
+  border-radius: 50%;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calc-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.calc-btn:active {
+  transform: scale(0.92);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.calc-btn.op {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
+}
+
+.calc-btn.op:hover {
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+}
+
+.calc-btn.clear {
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(248, 113, 113, 0.2);
+}
+
+.calc-btn.clear:hover {
+  box-shadow: 0 6px 20px rgba(248, 113, 113, 0.3);
+}
+
+.calc-btn.zero {
+  border-radius: 40px;
+  flex: 2.15;
+  justify-content: flex-start;
+  padding-left: 28px;
+}

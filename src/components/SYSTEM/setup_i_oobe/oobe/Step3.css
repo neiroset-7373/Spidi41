@@ -1,0 +1,63 @@
+.oobe-theme-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 32px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.oobe-theme-btn {
+  padding: 20px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.oobe-theme-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.oobe-theme-btn.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+.oobe-theme-btn:active {
+  transform: scale(0.96);
+}
+
+.theme-preview {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.theme-preview.theme-dark {
+  background: linear-gradient(135deg, #0f0f16 0%, #1a1a2e 100%);
+}
+
+.theme-preview.theme-light {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.theme-preview.theme-indigo {
+  background: linear-gradient(135deg, #312e81 0%, #4338ca 100%);
+}
+
+.theme-preview.theme-purple {
+  background: linear-gradient(135deg, #581c87 0%, #7c3aed 100%);
+}

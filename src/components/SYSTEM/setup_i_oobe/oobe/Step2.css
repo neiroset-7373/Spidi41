@@ -1,0 +1,61 @@
+.oobe-security-options {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.oobe-security-btn {
+  flex: 1;
+  padding: 28px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  min-width: 130px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.oobe-security-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.oobe-security-btn.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+.oobe-security-btn:active {
+  transform: scale(0.96);
+}
+
+.style-preview-text {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.oobe-security-desc {
+  font-size: 12px;
+  opacity: 0.45;
+  font-weight: 400;
+}

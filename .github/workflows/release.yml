@@ -1,0 +1,56 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: wintophone/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./wintophone
+        run: npm ci
+
+      - name: Build
+        working-directory: ./wintophone
+        run: npm run build
+
+      - name: Create Release Archive
+        run: |
+          cd wintophone/dist
+          zip -r ../wintophone-release.zip .
+          cd ..
+          mv wintophone-release.zip .
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: wintophone-release.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wintophone-build
+          path: wintophone/dist/
+          retention-days: 30
