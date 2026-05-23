@@ -38,9 +38,10 @@ jobs:
       - name: Build web app
         run: npm run build
 
-      - name: Sync Capacitor
+      - name: Copy web assets to Android
         run: |
-          npx cap sync
+          mkdir -p android/app/src/main/assets/www
+          cp -r dist/* android/app/src/main/assets/www/
 
       - name: Make Gradle Executable
         run: |

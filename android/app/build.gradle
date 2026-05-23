@@ -26,6 +26,14 @@ android {
     }
 }
 
+// Copy dist folder to assets
+task copyWebAssets(type: Copy) {
+    from '../dist'
+    into 'src/main/assets/www'
+}
+
+preBuild.dependsOn copyWebAssets
+
 repositories {
     flatDir{
         dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
