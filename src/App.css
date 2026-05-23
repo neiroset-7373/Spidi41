@@ -41,10 +41,10 @@ img {
 
 /* ===== PHONE FRAME ===== */
 .phone-frame {
-  width: 375px;
-  height: 812px;
+  width: 340px;
+  height: 740px;
   background: #0f0f16;
-  border-radius: 48px;
+  border-radius: 44px;
   overflow: hidden;
   position: relative;
   box-shadow:
@@ -59,11 +59,11 @@ img {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 150px;
-  height: 30px;
+  width: 130px;
+  height: 26px;
   background: #0f0f16;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
   z-index: 100;
 }
 
